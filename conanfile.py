@@ -12,7 +12,7 @@ import re
 
 
 class ArmGccConan(ConanFile):
-    name = "cmsis"
+    name = "cmsis_5"
     version = "1.0"
     license = "GPL-3.0-only"
     homepage = ""
@@ -68,14 +68,7 @@ class ArmGccConan(ConanFile):
 
     def source(self):
         print("CMSIS_SOURCE")
-        token = "r8EEQ327YSe3_kegTCvu"
-        git = Git(self)
-        repo_url = f"https://oauth2:{token}@git.orlan.in/breo_mcu/drivers/CMSIS_5.git"
 
-        git.clone(repo_url, "cmsis")
-        print("project cloned. It contains..")
-        self.run(f"ls -la ./cmsis")
-        self.run("cd ./cmsis && git checkout master")
         # git.checkout("master")
     def package_info(self):
         print("CMSIS_PACKAGE_INFO")
@@ -83,6 +76,15 @@ class ArmGccConan(ConanFile):
         print("CMSIS TOOLCHAIN IS: ", toolchain_path)
         # self.conf_info.define("tools.cmake.cmaketoolchain:user_toolchain", toolchain_path)
         self.cpp_info.builddirs.append(os.path.join(self.package_folder, "cmake"))
+
+        token = "r8EEQ327YSe3_kegTCvu"
+        git = Git(self)
+        repo_url = f"https://oauth2:{token}@git.orlan.in/breo_mcu/drivers/CMSIS_5.git"
+        if not os.path.exists("../cmsis"):
+            git.clone(repo_url, "../cmsis")
+            print("project cloned. It contains..")
+        self.run(f"ls -la ../cmsis")
+        self.run("cd ../cmsis && git checkout master")
 
 
 
