@@ -12,8 +12,8 @@ import re
 
 
 class ArmGccConan(ConanFile):
-    name = "cmsis_5"
-    version = "1.0"
+    name = "cmsis"
+    # version = "1.0"
     license = "GPL-3.0-only"
     homepage = ""
     url = ""
@@ -27,7 +27,7 @@ class ArmGccConan(ConanFile):
     programs = {}
     sha = {}
     archive_name = {}
-    exports_sources = "cmsis.cmake"
+    exports_sources = "cmsis.cmake", "source_url.txt"
     # generators = "CMakeToolchain"
 
     # generators = "CMakeDeps"
@@ -46,9 +46,18 @@ class ArmGccConan(ConanFile):
 
     def source(self):
         print("CMSIS_SOURCE")
-        cmake = CMake(self)
-        cmake.configure()
-        cmake.build()
+        url = os.getenv("URL")
+        print("URL: ", url)
+        tag = os.getenv("TAG")
+        print("TAG: ", tag)
+
+        with open(f"source_url.txt", "w") as file:
+            file.write(url + "\n")
+            file.write(tag + "\n")
+            file.close()
+        # cmake = CMake(self)
+        # cmake.configure()
+        # cmake.build()
 
 
     def generate(self):
@@ -63,28 +72,29 @@ class ArmGccConan(ConanFile):
         print("source folder: ", self.source_folder)
         print("export files: ", self.exports_sources)
         # self.run(f"ls -la .")
-        copy(self, "*", dst=self.package_folder + "/cmsis", src=self.source_folder +"/cmsis")
+        copy(self, "source_url.txt", dst=self.package_folder, src=self.source_folder)
         copy(self, "*.cmake", dst=self.package_folder+"/cmake", src=self.source_folder)
 
-    def source(self):
-        print("CMSIS_SOURCE")
-
-        # git.checkout("master")
     def package_info(self):
         print("CMSIS_PACKAGE_INFO")
         toolchain_path = os.path.join(self.package_folder, "cmake/cmsis.cmake")
         print("CMSIS TOOLCHAIN IS: ", toolchain_path)
         # self.conf_info.define("tools.cmake.cmaketoolchain:user_toolchain", toolchain_path)
+        self.conf_info.append("tools.cmake.cmaketoolchain:user_toolchain", toolchain_path)
         self.cpp_info.builddirs.append(os.path.join(self.package_folder, "cmake"))
-
-        token = "r8EEQ327YSe3_kegTCvu"
+        with open('source_url.txt', 'r') as file:
+            # Чтение содержимого файла
+            lines = file.readlines()
+            repo_url = lines[0].strip()
+            tag = lines[1].strip()
+        print("repo url: ", repo_url)
+        print("tag: ", tag)
         git = Git(self)
-        repo_url = f"https://oauth2:{token}@git.orlan.in/breo_mcu/drivers/CMSIS_5.git"
         if not os.path.exists("../cmsis"):
             git.clone(repo_url, "../cmsis")
             print("project cloned. It contains..")
         self.run(f"ls -la ../cmsis")
-        self.run("cd ../cmsis && git checkout master")
+        self.run(f"cd ../cmsis && git checkout {tag}")
 
 
 
