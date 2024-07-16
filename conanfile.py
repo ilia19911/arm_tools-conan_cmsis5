@@ -55,6 +55,19 @@ class ArmGccConan(ConanFile):
             file.write(url + "\n")
             file.write(tag + "\n")
             file.close()
+        with open('source_url.txt', 'r') as file:
+        # Чтение содержимого файла
+            lines = file.readlines()
+            repo_url = lines[0].strip()
+            tag = lines[1].strip()
+        print("repo url: ", repo_url)
+        print("tag: ", tag)
+        git = Git(self)
+        if not os.path.exists("./cmsis"):
+            git.clone(repo_url, "./cmsis")
+            print("project cloned. It contains..")
+        self.run(f"ls -la ./cmsis")
+        self.run(f"cd ./cmsis && git checkout {tag}")
         # cmake = CMake(self)
         # cmake.configure()
         # cmake.build()
@@ -71,9 +84,11 @@ class ArmGccConan(ConanFile):
         print("CMSIS_PACKAGE")
         print("source folder: ", self.source_folder)
         print("export files: ", self.exports_sources)
+
         # self.run(f"ls -la .")
         copy(self, "source_url.txt", dst=self.package_folder, src=self.source_folder)
         copy(self, "*.cmake", dst=self.package_folder+"/cmake", src=self.source_folder)
+        copy(self, "cmsis/*", dst=self.package_folder, src=self.source_folder)
 
     def package_info(self):
         print("CMSIS_PACKAGE_INFO")
@@ -82,19 +97,7 @@ class ArmGccConan(ConanFile):
         # self.conf_info.define("tools.cmake.cmaketoolchain:user_toolchain", toolchain_path)
         self.conf_info.append("tools.cmake.cmaketoolchain:user_toolchain", toolchain_path)
         self.cpp_info.builddirs.append(os.path.join(self.package_folder, "cmake"))
-        with open('source_url.txt', 'r') as file:
-            # Чтение содержимого файла
-            lines = file.readlines()
-            repo_url = lines[0].strip()
-            tag = lines[1].strip()
-        print("repo url: ", repo_url)
-        print("tag: ", tag)
-        git = Git(self)
-        if not os.path.exists("../cmsis"):
-            git.clone(repo_url, "../cmsis")
-            print("project cloned. It contains..")
-        self.run(f"ls -la ../cmsis")
-        self.run(f"cd ../cmsis && git checkout {tag}")
+
 
 
 

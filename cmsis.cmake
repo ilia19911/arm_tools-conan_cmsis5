@@ -1,4 +1,4 @@
-set(ROOT ${CMAKE_CURRENT_LIST_DIR}/../../cmsis)
+set(ROOT ${CMAKE_CURRENT_LIST_DIR}/../cmsis)
 set(CMSIS_DIR ROOT CACHE STRING "cmsis_5 root directory")
 
 add_subdirectory(${ROOT}/CMSIS/DSP/Source DSP_bin)
