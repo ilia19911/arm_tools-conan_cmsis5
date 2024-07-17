@@ -7,8 +7,7 @@ message(STATUS "CMSIS ROOT IS: " ${ROOT})
 set(CMSIS_5_INCLUDE_DIRS
         ${ROOT}/CMSIS/Core/Include
         ${ROOT}/CMSIS/DSP/Include
-        ${ROOT}/CMSIS/NN/Include )
+        ${ROOT}/CMSIS/NN/Include
+        ${ROOT}/CMSIS/RTOS2/Include)
 
-
-include_directories(${CMSIS_5_INCLUDE_DIRS}
-)
+include_directories(${CMSIS_5_INCLUDE_DIRS})

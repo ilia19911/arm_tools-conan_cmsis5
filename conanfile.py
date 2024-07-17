@@ -68,6 +68,8 @@ class ArmGccConan(ConanFile):
             print("project cloned. It contains..")
         self.run(f"ls -la ./cmsis")
         self.run(f"cd ./cmsis && git checkout {tag}")
+
+
         # cmake = CMake(self)
         # cmake.configure()
         # cmake.build()

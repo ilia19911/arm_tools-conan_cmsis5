@@ -26,8 +26,8 @@ for tag in tags:
     result = subprocess.run(comand, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
     if result.returncode == 0:
-        # comand = f" conan upload cmsis/{tag} -r=BREO"
-        # result = subprocess.run(comand, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        comand = f" conan upload cmsis/{tag} -r=BREO"
+        result = subprocess.run(comand, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         print("Команда завершилась успешно")
         print("Вывод команды:", result.stdout)
     if result.returncode !=0:
