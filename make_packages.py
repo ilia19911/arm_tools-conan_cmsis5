@@ -11,11 +11,11 @@ repo_url = f"https://oauth2:{token}@git.orlan.in/breo_mcu/drivers/CMSIS_5.git"
 # repo = git.Repo(repo_url)
 # Удаление папки, если она существует
 if os.path.exists("./cmsis"):
-    print(f"Удаление папки {"./cmsis"}...")
+    print(f"Удаление папки ./cmsis...")
     shutil.rmtree("./cmsis")
-    print(f"Папка {"./cmsis"} удалена.")
+    print(f"Папка ./cmsis удалена.")
 else:
-    print(f"Папка {"./cmsis"} не существует.")
+    print(f"Папка ./cmsis не существует.")
 
 repo = git.Repo.clone_from(repo_url, "./cmsis")
 tags = repo.tags
