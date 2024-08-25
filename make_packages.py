@@ -37,3 +37,5 @@ for tag in tags:
 
 
 #export URL="https://oauth2:bb8czxqpbkzn5PHp3nda@git.orlan.in/breo_mcu/drivers/CMSIS_5.git" && export TAG="5.9.1-dev" && conan create . --version=5.9.1-dev --build-require
+#conan upload cmsis/5.9.1-dev -r=BREO
+
