@@ -1,16 +1,36 @@
 cmake_minimum_required(VERSION 3.28)
 
+project(cmsis C  ASM)
 
+if(CMAKE_CROSSCOMPILING)
 
-project(cmsis C ASM)
+    option(HARDFP OFF)
+    ADD_GLOB_COMPILE_OPTIONS(${ARM_CPU})
+else ()
+    message("BUILDING FOR ITSELF")
+    option(HOST "Build for host" ON)
+    set(ARM_CPU cortex-m7)
+    set(VERSION "1.0.0-PC")
+endif ()
 
-message("ARM_CPU="${ARM_CPU})
-message("VERSION="${VERSION})
-SET(HARDFP OFF)
-#include(arm-gcc-toolchain)
-ADD_GLOB_COMPILE_OPTIONS(${ARM_CPU})
+#option(CONFIGTABLE          "Configuration of table allowed"    ON)
+##     When CONFIGTABLE is ON, select if all interpolation tables must be included
+#option(ALLFAST              "All interpolation tables included" ON)
+##     When CONFIGTABLE is ON, select if all FFT tables must be included
+#option(ALLFFT               "All fft tables included"           ON)
+
+message("ARM_CPU=" ${ARM_CPU})
+message("VERSION=" ${VERSION})
+
 
 set(ROOT ${CMAKE_CURRENT_LIST_DIR}/cmsis )
+
+file(READ ${ROOT}/CMSIS/DSP/Source/CMakeLists.txt file_content)
+
+string(REPLACE "target_include_directories"  "#target_include_directories" file_content "${file_content}")
+
+file(WRITE ${ROOT}/CMSIS/DSP/Source/CMakeLists.txt  "${file_content}")
+
 set(MY_LIST "CMSISDSPBasicMath;CMSISDSPBayes;CMSISDSPCommon;CMSISDSPComplexMath;CMSISDSPController;CMSISDSPDistance;CMSISDSPFastMath;CMSISDSPFiltering;CMSISDSPInterpolation;CMSISDSPMatrix;CMSISDSPTransform;CMSISDSPSVM;CMSISDSPSupport;CMSISDSPStatistics;CMSISDSPQuaternionMath;cmsis-nn")
 #set(MCU_LIST "cortex-m0; cortex-m1; cortex-m3; cortex-m4; cortex-m7")
 if(${ARM_CPU} STREQUAL cortex-m0 )
@@ -32,11 +52,11 @@ set(CMSIS_5_INCLUDE_DIRS
         "${ROOT}/CMSIS/RTOS2/Include"
 )
 
-function(CHANGE_INCLUDE_TO_PRIVATE TARGET)
+function(CHANGE_INCLUDE_TO_PRIVATE TARGET NEW_STATUS)
     # Изменяем свойство INTERFACE_INCLUDE_DIRECTORIES на новое значение
     get_target_property(existing_includes ${TARGET} INTERFACE_INCLUDE_DIRECTORIES)
     set_target_properties(${TARGET} PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "")
-    target_include_directories(${TARGET} PRIVATE ${existing_includes})
+    target_include_directories(${TARGET} ${NEW_STATUS} ${existing_includes})
 endfunction()
 
 function(copy_target_properties source_target dest_target)
@@ -106,17 +126,20 @@ target_include_directories(${LIB_NAME} INTERFACE
 
 foreach(item IN LISTS MY_LIST)
     target_include_directories(${item} PRIVATE ${CMSIS_5_INCLUDE_DIRS})
-    CHANGE_INCLUDE_TO_PRIVATE(${item})
-    target_link_libraries(${LIB_NAME} INTERFACE ${item})
+    CHANGE_INCLUDE_TO_PRIVATE(${item} PRIVATE)
+
 #    foreach(mcu IN LISTS MCU_LIST)
 #        add_library(${mcu}${item} STATIC)
 #        copy_target_properties(${item} ${mcu}${item})
 #    endforeach ()
 
 endforeach ()
+#CHANGE_INCLUDE_TO_PRIVATE(CMSISDSP INTERFACE)
+target_link_libraries(${LIB_NAME} INTERFACE CMSISDSP)
 
 install(TARGETS ${LIB_NAME}
         ${MY_LIST}
+        CMSISDSP
         EXPORT ${LIB_NAME}Targets
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib
@@ -142,5 +165,10 @@ install(FILES
         DESTINATION lib/cmake/
 )
 
+
+
+
 message("CMAKE_STATIC_LINKER_FLAGS: " ${CMAKE_STATIC_LINKER_FLAGS})
 message("HARDFP is:" ${HARDFP})
+
+#add_subdirectory(Test)

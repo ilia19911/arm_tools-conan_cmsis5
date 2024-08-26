@@ -32,6 +32,7 @@ class ArmGccConan(ConanFile):
         print("CMSIS_PYTHON_REQUIREMENTS")
 
     def requirements(self):
+        print("REQUIRES")
         # Указываем зависимости от тулчейнов
         self.requires("arm-gcc/13.2.rel1")
 
