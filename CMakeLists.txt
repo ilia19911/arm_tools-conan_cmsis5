@@ -9,8 +9,8 @@ if(CMAKE_CROSSCOMPILING)
 else ()
     message("BUILDING FOR ITSELF")
     option(HOST "Build for host" ON)
-    set(ARM_CPU cortex-m7)
-    set(VERSION "1.0.0-PC")
+#    set(ARM_CPU cortex-m7)
+#    set(VERSION "1.0.0-PC")
 endif ()
 
 #option(CONFIGTABLE          "Configuration of table allowed"    ON)
@@ -21,6 +21,7 @@ endif ()
 
 message("ARM_CPU=" ${ARM_CPU})
 message("VERSION=" ${VERSION})
+message("CMAKE_INSTALL_PREFIX=" ${CMAKE_INSTALL_PREFIX})
 
 
 set(ROOT ${CMAKE_CURRENT_LIST_DIR}/cmsis )
@@ -95,19 +96,19 @@ add_subdirectory(${ROOT}/CMSIS/NN NN_bin)
 
 
 install(DIRECTORY ${ROOT}/CMSIS/Core/Include/
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/Include/Core
+        DESTINATION ../Include/Core
         FILES_MATCHING PATTERN "*.h"
 )
 install(DIRECTORY ${ROOT}/CMSIS/DSP/Include/
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/Include/DSP
+        DESTINATION ../Include/DSP
         FILES_MATCHING PATTERN "*.h"
 )
 install(DIRECTORY ${ROOT}/CMSIS/NN/Include/
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/Include/NN
+        DESTINATION ../Include/NN
         FILES_MATCHING PATTERN "*.h"
 )
 install(DIRECTORY ${ROOT}/CMSIS/RTOS2/Include/
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/Include/RTOS2
+        DESTINATION ../Include/RTOS2
         FILES_MATCHING PATTERN "*.h"
 )
 
@@ -118,10 +119,10 @@ target_include_directories(${LIB_NAME} INTERFACE
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/CMSIS/DSP/Include>"
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/CMSIS/NN/Include>"
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/CMSIS/RTOS2/Include>"
-        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/Include/Core>"
-        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/Include/DSP>"
-        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/Include/NN>"
-        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/Include/RTOS2>"
+        "$<INSTALL_INTERFACE:../Include/Core>"
+        "$<INSTALL_INTERFACE:../Include/DSP>"
+        "$<INSTALL_INTERFACE:../Include/NN>"
+        "$<INSTALL_INTERFACE:../Include/RTOS2>"
 )
 
 foreach(item IN LISTS MY_LIST)
@@ -166,6 +167,14 @@ install(FILES
 )
 
 
+## CPack configuration
+#set(CPACK_PACKAGE_NAME ${LIB_NAME})
+#set(CPACK_PACKAGE_VERSION ${VERSION})
+#set(CPACK_PACKAGE_CONTACT "youremail@example.com")
+#set(CPACK_GENERATOR "ZIP")
+#set(CPACK_PACKAGE_INSTALL_DIRECTORY "CMSIS_INSTALLER")
+#set(CPACK_PACKAGING_INSTALL_PREFIX "./")
+#include(CPack)
 
 
 message("CMAKE_STATIC_LINKER_FLAGS: " ${CMAKE_STATIC_LINKER_FLAGS})
