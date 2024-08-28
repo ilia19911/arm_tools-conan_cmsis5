@@ -32,7 +32,7 @@ class ArmGccConan(ConanFile):
     def requirements(self):
         print("REQUIRES")
         # Указываем зависимости от тулчейнов
-        self.requires("arm-gcc/13.2.rel1")
+        self.requires("arm-gcc/[]")
 
     def validate(self):
         print("CMSIS_VALIDATION")
@@ -102,9 +102,10 @@ class ArmGccConan(ConanFile):
 
     def package_id(self):
         print("GCC_PACKAGE_ID")
-        self.info.settings_target = self.settings_target
-        self.info.settings_target.rm_safe("compiler")
-        self.info.settings_target.rm_safe("build_type")
+        if self.settings_target is not None:
+            self.info.settings_target = self.settings_target
+            self.info.settings_target.rm_safe("compiler")
+            self.info.settings_target.rm_safe("build_type")
         # self.info.settings.rm_safe("os")
         self.info.settings.arch="ANY"
         self.info.settings.os="ANY"
@@ -116,5 +117,8 @@ class ArmGccConan(ConanFile):
         # self.info.settings.rm_safe("compiler")
         self.info.settings.rm_safe("compiler.libcxx")
 
+#linux
+#export URL="https://oauth2:bb8czxqpbkzn5PHp3nda@git.orlan.in/breo_mcu/drivers/CMSIS_5.git" && export TAG="5.9.1-dev" && conan create . -pr:h=./profiles/linux_x86_64  --version=5.9.1-dev --build-require -r=BREO
+#arm32
 #export URL="https://oauth2:bb8czxqpbkzn5PHp3nda@git.orlan.in/breo_mcu/drivers/CMSIS_5.git" && export TAG="5.9.1-dev" && conan create . -pr:h=./profiles/armv7  --version=5.9.1-dev --build-require -r=BREO
 #conan upload cmsis/5.9.1-dev -r=BREO
