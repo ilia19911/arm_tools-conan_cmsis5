@@ -23,6 +23,7 @@ class ArmGccConan(ConanFile):
     exports_sources = "CMakeLists.txt"
     generators = "CMakeDeps", "CMakeToolchain"
     arm_cpus = ["cortex-m0", "cortex-m1", "cortex-m3", "cortex-m4", "cortex-m7"]
+    cmsis_url = "https://github.com/ARM-software/CMSIS_5.git"
 
     # generators = "CMakeDeps"
 
@@ -32,7 +33,7 @@ class ArmGccConan(ConanFile):
     def requirements(self):
         print("REQUIRES")
         # Указываем зависимости от тулчейнов
-        self.requires("arm-gcc/[]")
+        self.requires("gcc/13.3")
 
     def validate(self):
         print("CMSIS_VALIDATION")
@@ -42,25 +43,11 @@ class ArmGccConan(ConanFile):
 
     def source(self):
         print("CMSIS_SOURCE")
-        url = os.getenv("URL")
-        print("URL: ", url)
-        tag = os.getenv("TAG")
-        print("TAG: ", tag)
-
-        with open(f"source_url.txt", "w") as file:
-            file.write(url + "\n")
-            file.write(tag + "\n")
-            file.close()
-        with open('source_url.txt', 'r') as file:
-            # Чтение содержимого файла
-            lines = file.readlines()
-            repo_url = lines[0].strip()
-            tag = lines[1].strip()
-        print("repo url: ", repo_url)
+        tag = self.version
         print("tag: ", tag)
         git = Git(self)
         if not os.path.exists("./cmsis"):
-            git.clone(repo_url, "./cmsis")
+            git.clone(self.cmsis_url, "./cmsis")
             print("project cloned. It contains..")
         self.run(f"ls -la ./cmsis")
         self.run(f"cd ./cmsis && git checkout {tag}")
@@ -91,7 +78,7 @@ class ArmGccConan(ConanFile):
         print("export files: ", self.exports_sources)
 
         # self.run(f"ls -la .")
-        copy(self, "source_url.txt", dst=self.package_folder, src=self.source_folder)
+        copy(self, "tag.txt", dst=self.package_folder, src=self.source_folder)
         copy(self, "*.cmake", dst=self.package_folder + "/cmake", src=self.source_folder)
         copy(self, "cmsis/*", dst=self.package_folder, src=self.source_folder)
 
