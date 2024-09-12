@@ -105,7 +105,7 @@ class ArmGccConan(ConanFile):
         self.info.settings.rm_safe("compiler.libcxx")
 
 #linux
-#export URL="https://oauth2:bb8czxqpbkzn5PHp3nda@git.orlan.in/breo_mcu/drivers/CMSIS_5.git" && export TAG="5.9.1-dev" && conan create . -pr:h=./profiles/linux_x86_64  --version=5.9.1-dev --build-require -r=BREO
+#conan create . -pr:h=./profiles/linux_x86_64  --version=5.9.1-dev --build-require -r=arm-tools
 #arm32
-#export URL="https://oauth2:bb8czxqpbkzn5PHp3nda@git.orlan.in/breo_mcu/drivers/CMSIS_5.git" && export TAG="5.9.1-dev" && conan create . -pr:h=./profiles/armv7  --version=5.9.1-dev --build-require -r=BREO
+#conan create . -pr:h=./profiles/armv7  --version=5.9.1-dev --build-require -r=arm-tools
 #conan upload cmsis/5.9.1-dev -r=BREO
