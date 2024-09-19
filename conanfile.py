@@ -33,7 +33,7 @@ class ArmGccConan(ConanFile):
     def requirements(self):
         print("REQUIRES")
         # Указываем зависимости от тулчейнов
-        self.requires("gcc/13.3")
+        self.requires("gcc/13")
 
     def validate(self):
         print("CMSIS_VALIDATION")

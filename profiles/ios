@@ -1,5 +1,5 @@
 [settings]
-os=Macos
+os=iOS
 arch=armv8
 compiler=gcc
 compiler.cppstd=gnu14

@@ -42,6 +42,10 @@ elseif (${ARM_CPU} STREQUAL cortex-m3)
     set(SUFFIX "_M3")
 elseif (${ARM_CPU} STREQUAL cortex-m4)
     set(SUFFIX "_M4")
+    elseif (${ARM_CPU} STREQUAL cortex-m4)
+    set(SUFFIX "_M5")
+    elseif (${ARM_CPU} STREQUAL cortex-m4)
+    set(SUFFIX "_M6")
 elseif (${ARM_CPU} STREQUAL cortex-m7)
     set(SUFFIX "_M7")
 endif ()
@@ -157,7 +161,7 @@ write_basic_package_version_file(
 
 install(EXPORT ${LIB_NAME}Targets
         FILE ${LIB_NAME}Config.cmake
-        NAMESPACE BREO::
+        NAMESPACE CMSIS::
         DESTINATION lib/cmake/
 )
 
