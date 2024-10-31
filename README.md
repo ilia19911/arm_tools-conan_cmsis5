@@ -65,7 +65,7 @@ The library includes various CMSIS versions for different platforms. The librari
 If you need more cpu's , please, text me or add it yourself
 # How to use
 
- You can find an example in another repository of mine, where I use several packages and separate logic from hardware using C++ drivers. (To-do: Add repo link).
+ You can find an example in another [repository](https://github.com/ilia19911/arm_tools-simple_stm32f4) of mine, where I use several packages and separate logic from hardware using C++ drivers.
 
  # Build
 To build the package, clone the repository:  *git clone https://github.com/ilia19911/arm_tools-conan_gcc.git*
